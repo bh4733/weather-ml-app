@@ -1,0 +1,14 @@
+- name: Install kubectl
+  hosts: localhost
+  user: ubuntu
+  become: yes
+  tasks:
+    - name: 1, Download kubectl binary
+      get_url:
+        url: https://dl.k8s.io/release/v1.29.0/bin/linux/amd64/kubectl
+        dest: /usr/local/bin/kubectl
+        mode: '0755'
+
+    - name: 2, Verify kubectl installation
+      command: kubectl version --client
+

@@ -1,0 +1,18 @@
+- name: Install and Start Minikube
+  hosts: localhost
+  user: ubuntu
+  become: yes
+
+  tasks:
+    - name: 1. Download Minikube binary
+      get_url:
+        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+        dest: /usr/local/bin/minikube
+        mode: '0755'
+
+    - name: 2. Verify Minikube installation
+      command: minikube version
+
+    - name: 3. Start Minikube
+      become: no
+      command: minikube start --driver=docker
