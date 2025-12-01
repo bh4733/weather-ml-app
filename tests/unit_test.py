@@ -1,4 +1,10 @@
 import unittest
+import sys
+import os
+
+# Add the project root BEFORE trying to import app.py
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from app import app, classify_weather, load_model
 import numpy as np
 from unittest.mock import patch
