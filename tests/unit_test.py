@@ -63,15 +63,17 @@ class TestWeatherApp(unittest.TestCase):
         class_result, _ = classify_weather(test_input)
         self.assertEqual(class_result.lower(), "rainy")
 
-    @patch('app.load_model')
-    def test_foggy_classification_output(self, mock_load_model):
-        """Test that a foggy example is classified as 'foggy'."""
-        dummy_model = mock_load_model.return_value
-        dummy_model.predict.return_value = np.array([[0.0, 0.0, 1.0]])  # third class = foggy
 
-        test_input = np.array([289.47, 1015, 88, 2, 300, 0, 0, 0, 20]).reshape(1, -1)
-        class_result, _ = classify_weather(test_input)
-        self.assertEqual(class_result.lower(), "foggy")
+@patch('app.load_model')
+def test_foggy_classification_output(self, mock_load_model):
+    """Test that a foggy example is classified as 'foggy'."""
+    dummy_model = mock_load_model.return_value
+    dummy_model.predict.return_value = np.array([[0.0, 0.0, 0.0, 1.0]])  # foggy is index 3
+
+    test_input = np.array([829.47, 1015, 88, 2, 300, 0, 0, 0, 20]).reshape(1, -1)
+    class_result, _ = classify_weather(test_input)
+    self.assertEqual(class_result.lower(), "foggy")
+
 
 
 if __name__ == '__main__':
