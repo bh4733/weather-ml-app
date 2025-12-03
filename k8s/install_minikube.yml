@@ -16,3 +16,4 @@
     - name: 3. Start Minikube
       become: no
       command: minikube start --driver=docker
+      become: yes

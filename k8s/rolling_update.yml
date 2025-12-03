@@ -1,0 +1,25 @@
+- name: Rolling update for weather-ml-app
+  hosts: localhost
+  connection: local
+
+  vars:
+    new_image: "bbipinn/weather-ml-app:latest"
+
+  tasks:
+
+    - name: Scale deployment to 3 replicas (prepare for rolling updates)
+      command: kubectl scale deployment weather-ml-app --replicas=3
+
+    - name: Update deployment image
+      command: kubectl set image deployment/weather-ml-app weather-ml-app={{ new_image }}
+
+    - name: Wait for rollout to finish
+      command: kubectl rollout status deployment/weather-ml-app
+
+
+
+
+
+
+
+
