@@ -1,0 +1,44 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  weather-ml-app:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/weather-ml-app
+      K8S_NAMESPACE: default
+      K8S_DEPLOYMENT: weather-ml-app
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: install kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: "latest"
+
+      - name: Install minikube
+        run: |
+          curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          chmod +x minikube
+          sudo mv minikube /usr/local/bin/
+
+      - name: Start minikube
+        run: |
+          minikube start --driver=docker
+          minikube update-context
+
+      - name: Apply Deployment & Service
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+
+      - name: Rolling Update Deployment
+        run: |
+          kubectl scale deployment/$K8S_DEPLOYMENT --replicas=3 -n $K8S_NAMESPACE
+          kubectl set image deployment/$K8S_DEPLOYMENT "*=$IMAGE_NAME:latest" -n $K8S_NAMESPACE
+          kubectl rollout status deployment/$K8S_DEPLOYMENT -n $K8S_NAMESPACE
