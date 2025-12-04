@@ -26,9 +26,14 @@ def classify_weather(features):
     model = load_model()
 
     start = time.time()
-    label = model.predict(features)[0]   # this is the class label
+    prediction = model.predict(features)[0]
     latency = round((time.time() - start) * 1000, 2)
 
+      # Ensure prediction is a NumPy array for argmax
+    prediction = np.array(prediction)
+    prediction_index = np.argmax(prediction)
+
+    label = weather_classes[int(prediction_index)]
     return label, latency
 # ----------------------------
 # FIX 3: HANDLE MISSING FIELDS → RETURN 400 
