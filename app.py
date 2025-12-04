@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 # Labels required by your unit test
-weather_classes = ['clear', 'rainy', 'cloudy', 'foggy']
+weather_classes = ['clear', 'rain', 'cloudy', 'foggy']
 
 # ----------------------------
 # FIX 1: SAFELY LOAD MODEL
