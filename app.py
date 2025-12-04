@@ -67,7 +67,7 @@ def home():
         prediction = classify_weather(features)
 
         # Integration test expects HTML to contain the prediction word
-        return render_template("result.html", prediction=prediction)
+        return render_template("result.html", prediction=label)
 
     return render_template("form.html")
     
