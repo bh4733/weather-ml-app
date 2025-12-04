@@ -26,14 +26,9 @@ def classify_weather(features):
     model = load_model()
 
     start = time.time()
-    prediction = model.predict(features)[0]
+    label = model.predict(features)[0]   # this is the class label
     latency = round((time.time() - start) * 1000, 2)
 
-      # Ensure prediction is a NumPy array for argmax
-    prediction = np.array(prediction)
-    prediction_index = np.argmax(prediction)
-
-    label = weather_classes[int(prediction_index)]
     return label, latency
 # ----------------------------
 # FIX 3: HANDLE MISSING FIELDS → RETURN 400 
@@ -72,7 +67,7 @@ def home():
         prediction = classify_weather(features)
 
         # Integration test expects HTML to contain the prediction word
-        return render_template("result.html", prediction=prediction)
+        return render_template("result.html", prediction=label)
 
     return render_template("form.html")
     
